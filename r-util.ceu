@@ -1,0 +1,39 @@
+#ifndef _R_UTIL
+#define _R_UTIL
+
+native/pre do
+
+##ifdef DEBUG
+ ##undef DEBUG
+ ##define DEBUG 1
+##else
+ ##define DEBUG 0
+##endif
+
+#define log(fmt, ...) \
+  do { if (DEBUG) fprintf(stderr, "%s:%d: " fmt, __FILE__, \
+      __LINE__, __VA_ARGS__); } while (0)
+
+
+##define PTR(x) x
+
+end
+
+native/nohold
+  _log,
+;
+
+native/pure
+  _PTR,
+;
+
+code/tight R_Vec_Cat (var&[] byte vet, var&[] byte payload) -> none do
+  $vet = $vet - 1;
+  vet = vet .. payload;
+end
+
+code/tight R_Clear_Vec (var&[] byte vet) -> none do
+  $vet = 0;
+end
+
+#endif
